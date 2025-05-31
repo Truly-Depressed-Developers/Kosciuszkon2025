@@ -89,7 +89,7 @@ export default async function Page() {
                           <span>Some panels are offline</span>
                         </div>
                       )}
-                      <Link href={`/dashboard/device/${device.uuid}`}>
+                      <Link href={`/device/${device.uuid}`}>
                         <Button className="mb-2" size="sm">
                           View Details <FaArrowRightToBracket />
                         </Button>

@@ -66,8 +66,8 @@ export async function middleware(request: NextRequest) {
   const { response, user: sessionUser } = await updateSupabaseSession(request);
   const { pathname } = request.nextUrl;
 
-  const protectedRoutes = ['/dashboard', '/addDevice'];
-  const authRoutes = ['/auth/login', '/auth/register', '/auth/logout'];
+  const protectedRoutes = ['/dashboard', '/addDevice', '/auth/logout'];
+  const authRoutes = ['/auth/login', '/auth/register'];
   const publicAllowedRoutes: string[] = [];
 
   if (publicAllowedRoutes.some((route) => pathname.startsWith(route))) {

@@ -11,8 +11,10 @@ export default function Logout() {
 
   useEffect(() => {
     (async () => {
-      await supabase.auth.signOut();
-      router.push('/');
+      const err = await supabase.auth.signOut();
+      console.log('Logout response:', err.error);
+
+      router.push('/auth/login');
       router.refresh();
     })();
   }, [router, supabase.auth]);
