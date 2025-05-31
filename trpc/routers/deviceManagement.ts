@@ -1,42 +1,38 @@
 import { z } from 'zod';
 import { prisma } from '@/prisma/prisma';
-import { router, procedure } from '../init';
+import { router, protectedProcedure } from '../init';
 
 export const deviceManagementRouter = router({
-  addDevice: procedure
+  addDevice: protectedProcedure
     .input(
       z.object({
-        name: z.string().min(1, 'Nazwa urządzenia jest wymagana'),
+        uuid: z.string().min(1, 'UUID is required'),
       })
     )
     .mutation(async ({ ctx, input }) => {
-      if (!ctx.user) {
-        throw new Error('Nie jesteś zalogowany');
-      }
-
       const existingDevice = await prisma.device.findFirst({
         where: {
-          name: input.name,
+          uuid: input.uuid,
         },
       });
 
       if (existingDevice) {
         return {
           success: false,
-          message: `Urządzenie ${existingDevice.name} już istnieje`,
+          message: `Device ${existingDevice.uuid} already exists`,
         };
       }
 
       const newDevice = await prisma.device.create({
         data: {
-          name: input.name,
+          uuid: input.uuid,
           userId: ctx.user.id,
         },
       });
 
       return {
         success: true,
-        message: `Urządzenie ${newDevice.name} dodane pomyślnie`,
+        message: `Device ${newDevice.uuid} added successfully`,
       };
     }),
 });

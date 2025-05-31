@@ -15,7 +15,7 @@ type Props = {
 };
 
 export default function AddDeviceForm({ className = '' }: Props) {
-  const [deviceName, setDeviceName] = useState('');
+  const [deviceUUID, setDeviceUUID] = useState('');
   const addDevice = trpc.device.addDevice.useMutation();
   const [loading, setLoading] = useState(false);
   const [serverMessage, setServerMessage] = useState<ServerMessage | null>(null);
@@ -25,17 +25,17 @@ export default function AddDeviceForm({ className = '' }: Props) {
     setLoading(true);
     setServerMessage(null);
 
-    if (deviceName == '') {
-      alert('Please enter a device name.');
+    if (deviceUUID == '') {
+      alert('Please enter a device UUID.');
       setLoading(false);
       return;
     }
 
     addDevice.mutate(
-      { name: deviceName },
+      { uuid: deviceUUID },
       {
         onSuccess: (data) => {
-          setDeviceName('');
+          setDeviceUUID('');
           setServerMessage({ type: data.success ? 'success' : 'error', message: data.message });
           setLoading(false);
         },
@@ -73,11 +73,11 @@ export default function AddDeviceForm({ className = '' }: Props) {
                 </span>
               </div>
             )}
-            <Label htmlFor="deviceName">Device Name</Label>
+            <Label htmlFor="deviceName">Device UUID</Label>
             <Input
               id="deviceName"
-              value={deviceName}
-              onChange={(val) => setDeviceName(val.currentTarget.value)}
+              value={deviceUUID}
+              onChange={(val) => setDeviceUUID(val.currentTarget.value)}
             />
             <Button type="submit" className="mt-4 w-full" disabled={loading}>
               {loading && <Loader2 className="mr-2 size-4 animate-spin" />}
