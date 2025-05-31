@@ -2,7 +2,21 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-const seedData = async () => {};
+const seedData = async () => {
+  const producers = [
+    { name: 'Energa', link: 'https://www.energa.pl/kampanie/dom/fotowoltaika/kampania-eko' },
+    { name: 'House Solutions', link: 'https://house-solutions.pl/poradnik/' },
+    { name: 'Otovo', link: 'https://www.otovo.pl/a/instalacje-fotowoltaiczne/' },
+    { name: 'SunSol', link: 'https://sunsol.pl/instalacje-pv/montaz/' },
+    { name: 'BiSolar', link: 'https://bisolar.pl' },
+  ];
+
+  for (const producer of producers) {
+    await prisma.producents.create({
+      data: producer,
+    });
+  }
+};
 
 /**
  * Main seed function to populate the database
