@@ -3,8 +3,6 @@ import React from "react";
 import { Badge } from "../ui/badge";
 import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from "../ui/card";
 
-// Generate 50 mock panel statuses
-
 
 interface StatusTableProps {
   data: {

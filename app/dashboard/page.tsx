@@ -1,8 +1,10 @@
-'use client'
+
 import StatusTable from '@/components/dashboard/StatusTable';
 import { PageLayout, PageTitle } from '@/components/layout/PageLayout';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardDescription, CardFooter, CardTitle } from '@/components/ui/card';
+import { trpc } from '@/trpc/server';
+import Link from 'next/link';
 import React from 'react';
 
 // const panelStatuses = Array.from({ length: 50 }, (_, i) => ({
@@ -10,40 +12,12 @@ import React from 'react';
 //   status: Math.random() > 0.2 ? "online" : "offline", // ~80% online
 // }));
 
-const panels = [
-  {
-    id: 1,
-    statuses: [
-      { id: 1, status: "online" },
-      { id: 2, status: "offline" },
-      { id: 3, status: "online" },
-      { id: 4, status: "offline" },
-    ]
-  },
-  {
-    id: 2,
-    statuses: [
-      { id: 1, status: "online" },
-      { id: 2, status: "online" },
-      { id: 3, status: "online" },
-      { id: 4, status: "online" },
-    ]
-  },
-  {
-    id: 3,
-    statuses: [
-      { id: 1, status: "online" },
-      { id: 2, status: "online" },
-      { id: 3, status: "online" },
-      { id: 4, status: "online" },
-    ]
-  },
-]
 
 
 
-export default function Page() {
+export default async function Page() {
   // const [currentPanel, setCurrentPanel] = React.useState<number | null>(null);
+  const data = await trpc.device.getDevices();
   // const handleSetCurrentPanel = (id: number) => setCurrentPanel(id);
 
   return (
@@ -51,41 +25,43 @@ export default function Page() {
       <PageTitle>Dashboard</PageTitle>
       <div className='w-1/2 h-full m-auto'>
         <div className='flex flex-col gap-4'>
-          {panels.map((panel) => (
-            <Card key={panel.id} className="w-full h-15 bg-transparent shadow-lg p-4 flex justify-between hover:cursor-pointer">
-              <div className='flex items-center gap-4'>
-                <div className='w-2 flex justify-center items-center'>
+          {data.devices.map((device) => (
+            <Link href={`/dashboard/device/${device.uuid}`} key={device.uuid}>
+              <Card key={device.uuid} className="w-full h-15 bg-transparent shadow-lg p-4 flex justify-between hover:cursor-pointer">
+                <div className='flex items-center gap-4'>
+                  <div className='w-2 flex justify-center items-center'>
+                    {
+                      device.panels.filter(s => s.status === "offline").length > 0 ? (
+                        <span className='text-red-600 text-3xl'>!</span>
+                      ) :
+                        <span className='text-green-600 text-xl'>✓</span>
+                    }
+                  </div>
+                  <div>
+                    <CardTitle>Device {device.uuid}</CardTitle>
+                    <CardDescription>
+                      description
+                    </CardDescription>
+                  </div>
+                </div>
+                <div className='flex items-center gap-2'>
+                  <Badge className=' bg-successAlert text-successAlert-foreground'>
+                    {device.panels.filter(s => s.status === "online").length} online
+                  </Badge>
                   {
-                    panel.statuses.filter(s => s.status === "offline").length > 0 ? (
-                      <span className='text-red-600 text-3xl'>!</span>
-                    ) :
-                      <span className='text-green-600 text-xl'>✓</span>
+                    device.panels.filter(s => s.status === "offline").length > 0 ? (
+                      <Badge variant={"destructive"} className=' bg-errorAlert text-errorAlert-foreground'>
+                        {device.panels.filter(s => s.status === "offline").length} offline
+                      </Badge>
+                    )
+                      :
+                      null
                   }
-                </div>
-                <div>
-                  <CardTitle>Panel #{panel.id}</CardTitle>
-                  <CardDescription>
-                    description
-                  </CardDescription>
-                </div>
-              </div>
-              <div className='flex items-center gap-2'>
-                <Badge className=' bg-successAlert text-successAlert-foreground'>
-                  {panel.statuses.filter(s => s.status === "online").length} online
-                </Badge>
-                {
-                  panel.statuses.filter(s => s.status === "offline").length > 0 ? (
-                    <Badge variant={"destructive"} className=' bg-errorAlert text-errorAlert-foreground'>
-                      {panel.statuses.filter(s => s.status === "offline").length} offline
-                    </Badge>
-                  )
-                    :
-                    null
-                }
 
-              </div>
+                </div>
 
-            </Card>
+              </Card>
+            </Link>
           ))}
 
         </div>
