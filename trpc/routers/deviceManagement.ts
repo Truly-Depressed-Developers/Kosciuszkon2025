@@ -35,29 +35,27 @@ export const deviceManagementRouter = router({
         message: `Device ${newDevice.uuid} added successfully`,
       };
     }),
-  getDevices: protectedProcedure
-    .query(async ({ ctx }) => {
-      const devices = await prisma.device.findMany({
-        where: {
-          userId: ctx.user.id,
-        },
-        orderBy: {
-          createdAt: 'desc',
-        },
-      });
+  getDevices: protectedProcedure.query(async ({ ctx }) => {
+    const devices = await prisma.device.findMany({
+      where: {
+        userId: ctx.user.id,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
 
-      return {
-        devices: devices.map(device => ({
-          uuid: device.uuid,
-          panels: [
-            { id: 1, status: 'online' },
-            { id: 2, status: 'offline' },
-            { id: 3, status: 'online' },
-            { id: 4, status: 'offline' },
-            { id: 5, status: 'online' },
-          ]
-        })),
-      };
-    }
-    ),
+    return {
+      devices: devices.map((device) => ({
+        uuid: device.uuid,
+        panels: [
+          { id: 1, status: 'online' },
+          { id: 2, status: 'offline' },
+          { id: 3, status: 'online' },
+          { id: 4, status: 'offline' },
+          { id: 5, status: 'online' },
+        ],
+      })),
+    };
+  }),
 });
