@@ -8,6 +8,14 @@ datasource db {
 }
 
 model Dummy {
-  id      Int      @id @default(autoincrement())
-  name    String
+  id   Int    @id @default(autoincrement())
+  name String
+}
+
+model Device {
+  id        Int      @id @default(autoincrement())
+  name      String
+  userId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
