@@ -28,12 +28,12 @@ export const solarDataRouter = router({
           gatewayModel: gatewayDeviceIdentification.model,
           gatewaySerialNumber: gatewayDeviceIdentification.serialNumber,
 
-          systemSummaryJson: systemSummary as any,
-          overallOperationalStatusJson: overallOperationalStatus as any,
-          acGridParametersJson: acGridParameters as any,
-          environmentalContextJson: environmentalContext as any,
-          gatewayInternalTemperaturesJson: gatewayInternalTemperatures as any,
-          individualModulePerformanceJson: individualModulePerformance as any,
+          systemSummaryJson: systemSummary,
+          overallOperationalStatusJson: overallOperationalStatus,
+          acGridParametersJson: acGridParameters,
+          environmentalContextJson: environmentalContext,
+          gatewayInternalTemperaturesJson: gatewayInternalTemperatures,
+          individualModulePerformanceJson: individualModulePerformance,
         },
       });
 
