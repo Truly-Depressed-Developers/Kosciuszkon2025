@@ -42,7 +42,7 @@ export default function RegisterForm({ className }: RegisterFormProps) {
 
     setLoading(true);
 
-    const { data: loginInfo, error } = await supabase.auth.updateUser({
+    const { data: loginInfo, error } = await supabase.auth.signUp({
       email,
       password,
     });

@@ -1,6 +1,6 @@
 // This is a Server Component by default (no 'use client')
 
-import { PageLayout } from "@/components/layout/PageLayout";
+import { PageLayout } from '@/components/layout/PageLayout';
 
 type Props = {
   params: {

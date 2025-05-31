@@ -40,10 +40,13 @@ export default function LoginForm({ className }: LoginFormProps) {
     setLoading(true);
     setServerMessage(null);
 
+    console.log('Login data:', data);
     const { error } = await supabase.auth.signInWithPassword({
       email: data.email,
       password: data.password,
     });
+
+    console.log('Login response:', error);
 
     setLoading(false);
 
