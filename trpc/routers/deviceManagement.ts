@@ -1,0 +1,63 @@
+import { z } from 'zod';
+import { prisma } from '@/prisma/prisma';
+import { router, protectedProcedure } from '../init';
+
+export const deviceManagementRouter = router({
+  addDevice: protectedProcedure
+    .input(
+      z.object({
+        uuid: z.string().min(1, 'UUID is required'),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const existingDevice = await prisma.device.findFirst({
+        where: {
+          uuid: input.uuid,
+        },
+      });
+
+      if (existingDevice) {
+        return {
+          success: false,
+          message: `Device ${existingDevice.uuid} already exists`,
+        };
+      }
+
+      const newDevice = await prisma.device.create({
+        data: {
+          uuid: input.uuid,
+          userId: ctx.user.id,
+        },
+      });
+
+      return {
+        success: true,
+        message: `Device ${newDevice.uuid} added successfully`,
+      };
+    }),
+  getDevices: protectedProcedure
+    .query(async ({ ctx }) => {
+      const devices = await prisma.device.findMany({
+        where: {
+          userId: ctx.user.id,
+        },
+        orderBy: {
+          createdAt: 'desc',
+        },
+      });
+
+      return {
+        devices: devices.map(device => ({
+          uuid: device.uuid,
+          panels: [
+            { id: 1, status: 'online' },
+            { id: 2, status: 'offline' },
+            { id: 3, status: 'online' },
+            { id: 4, status: 'offline' },
+            { id: 5, status: 'online' },
+          ]
+        })),
+      };
+    }
+    ),
+});

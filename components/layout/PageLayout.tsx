@@ -7,6 +7,7 @@ type PageLayoutProps = {
   full?: boolean;
 };
 
+
 export function PageLayout({ children, className, full }: PageLayoutProps) {
   return (
     <div className={cn('mx-auto p-6', className, full ? 'h-full w-full' : '')}>{children}</div>
