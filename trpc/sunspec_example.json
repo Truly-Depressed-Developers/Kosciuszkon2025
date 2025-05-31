@@ -31,7 +31,7 @@
   },
   "individual_module_performance": [
     {
-      "module_id": "Rzad1_Panel1_SN_PANEL_A123",
+      "module_id": "1_1_SN_PANEL_A123",
       "manufacturer": "PanelProducentA",
       "dc_voltage": {
         "value": 35.5,
@@ -52,7 +52,7 @@
       "status_label": "Optimal"
     },
     {
-      "module_id": "Rzad1_Panel2_SN_PANEL_B456",
+      "module_id": "1_2_SN_PANEL_B456",
       "manufacturer": "PanelProducentB",
       "dc_voltage": {
         "value": 35.2,
