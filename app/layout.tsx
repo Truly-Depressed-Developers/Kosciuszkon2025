@@ -3,7 +3,6 @@ import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import { TRPCProvider } from '@/trpc/client';
 import { ThemeProvider } from '@/components/layout/ThemeProvider';
-import NavBar from '@/components/layout/NavBar';
 import React from 'react';
 import { Toaster } from '@/components/ui/sonner';
 import { AuthProvider } from '@/components/auth/AuthContext';
@@ -42,7 +41,6 @@ export default function RootLayout({
           <TRPCProvider>
             <AuthProvider>
               <main className="grow overflow-y-auto">{children}</main>
-              <NavBar />
               <Toaster position="top-center" />
             </AuthProvider>
           </TRPCProvider>

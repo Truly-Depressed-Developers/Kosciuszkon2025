@@ -4,10 +4,14 @@ import { ReactNode } from 'react';
 type PageLayoutProps = {
   children: ReactNode;
   className?: string;
+  full?: boolean;
 };
 
-export function PageLayout({ children, className }: PageLayoutProps) {
-  return <div className={cn('mx-auto p-6 w-full h-full', className)}>{children}</div>;
+
+export function PageLayout({ children, className, full }: PageLayoutProps) {
+  return (
+    <div className={cn('mx-auto p-6', className, full ? 'h-full w-full' : '')}>{children}</div>
+  );
 }
 
 type PageTitleProps = {
