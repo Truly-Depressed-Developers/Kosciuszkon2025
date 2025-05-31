@@ -1,0 +1,114 @@
+{
+  "timestamp": "2025-05-31T20:10:00Z",
+  "gateway_device_identification": {
+    "manufacturer": "GatewayProducentXYZ",
+    "model": "GatewayModel-1000",
+    "serial_number": "GW-SN-987654321"
+  },
+  "system_summary": {
+    "total_ac_power_output": {
+      "value": 5750.0,
+      "unit": "W"
+    },
+    "total_dc_input_power": {
+      "value": 5980.0,
+      "unit": "W"
+    },
+    "energy_produced_today": {
+      "value": 28.5,
+      "unit": "kWh"
+    },
+    "energy_produced_total_lifetime": {
+      "value": 15264.2,
+      "unit": "kWh"
+    }
+  },
+  "overall_operational_status": {
+    "system_state_numeric": 4,
+    "system_state_label": "Producing",
+    "fault_code_general": 0,
+    "fault_code_vendor": 0
+  },
+  "individual_module_performance": [
+    {
+      "module_id": "Rzad1_Panel1_SN_PANEL_A123",
+      "manufacturer": "PanelProducentA",
+      "dc_voltage": {
+        "value": 35.5,
+        "unit": "V"
+      },
+      "dc_current": {
+        "value": 8.1,
+        "unit": "A"
+      },
+      "dc_power": {
+        "value": 287.5,
+        "unit": "W"
+      },
+      "temperature": {
+        "value": 42.0,
+        "unit": "°C"
+      },
+      "status_label": "Optimal"
+    },
+    {
+      "module_id": "Rzad1_Panel2_SN_PANEL_B456",
+      "manufacturer": "PanelProducentB",
+      "dc_voltage": {
+        "value": 35.2,
+        "unit": "V"
+      },
+      "dc_current": {
+        "value": 8.0,
+        "unit": "A"
+      },
+      "dc_power": {
+        "value": 281.6,
+        "unit": "W"
+      },
+      "temperature": {
+        "value": 41.5,
+        "unit": "°C"
+      },
+      "status_label": "Optimal"
+    }
+  ],
+  "ac_grid_parameters": {
+    "grid_frequency": {
+      "value": 50.02,
+      "unit": "Hz"
+    },
+    "phase_L1_voltage_ln": {
+      "value": 231.0,
+      "unit": "V"
+    },
+    "phase_L2_voltage_ln": {
+      "value": 230.5,
+      "unit": "V"
+    },
+    "phase_L3_voltage_ln": {
+      "value": 230.8,
+      "unit": "V"
+    }
+  },
+  "environmental_context": {
+    "plane_of_array_irradiance": {
+      "value": 880.0,
+      "unit": "W/m^2"
+    },
+    "ambient_temperature": {
+      "value": 26.0,
+      "unit": "°C"
+    }
+  },
+  "gateway_internal_temperatures": {
+    "cabinet_temperature": {
+      "value": 38.5,
+      "unit": "Cel"
+    },
+    "heatsink_temperature": {
+      "value": 45.0,
+      "unit": "Cel"
+    }
+  }
+}

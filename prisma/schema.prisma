@@ -12,6 +12,26 @@ model Dummy {
   name String
 }
 
+
+model GatewayReading {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  timestamp DateTime
+
+  gatewayManufacturer String
+  gatewayModel        String
+  gatewaySerialNumber String
+
+  systemSummaryJson               Json
+  overallOperationalStatusJson    Json
+  acGridParametersJson            Json
+  environmentalContextJson        Json
+  gatewayInternalTemperaturesJson Json
+  individualModulePerformanceJson Json
+}
+
 model Device {
   uuid      String   @id @unique
   userId    String
