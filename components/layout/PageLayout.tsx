@@ -7,7 +7,7 @@ type PageLayoutProps = {
 };
 
 export function PageLayout({ children, className }: PageLayoutProps) {
-  return <div className={cn('mx-auto p-6', className)}>{children}</div>;
+  return <div className={cn('mx-auto p-6 w-full h-full', className)}>{children}</div>;
 }
 
 type PageTitleProps = {

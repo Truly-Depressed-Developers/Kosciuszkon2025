@@ -14,7 +14,7 @@ export default function NavBar() {
       <NavBarLink text="B" url="/b">
         <QrCodeIcon className="size-6" />
       </NavBarLink>
-      <NavBarLink text="C" url="/c">
+      <NavBarLink text="Dashboard" url="/dashboard">
         <AwardIcon className="size-6" />
       </NavBarLink>
       <NavBarLink text="Settings" url="/settings">
