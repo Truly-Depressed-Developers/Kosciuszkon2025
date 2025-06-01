@@ -39,8 +39,8 @@ export const gatewayReadingManagementRouter = router({
       individualModulePerformanceJson: transformed.individualModulePerformanceJson.map(
         (module) => ({
           ...module,
-          module_id: `${module.module_id}-1`, // Simulate different module IDs
-          status_label: module.status_label === 'bad' ? 'good' : module.status_label,
+          moduleId: `${module.module_id}-1`, // Simulate different module IDs
+          statusLabel: module.status_label === 'bad' ? 'good' : module.status_label,
         })
       ),
     };
@@ -52,16 +52,16 @@ export const gatewayReadingManagementRouter = router({
       individualModulePerformanceJson: transformed.individualModulePerformanceJson.map(
         (module) => ({
           ...module,
-          module_id: `${module.module_id}-2`, // Simulate different module IDs
-          status_label: 'good',
+          moduleId: `${module.module_id}-2`, // Simulate different module IDs
+          statusLabel: 'good',
         })
       ),
     };
 
     // }
-    // readings.push(transformed);
-    // readings.push(newSimulationReading);
-    // readings.push(newSimulationReading2);
+    readings.push(transformed);
+    readings.push(newSimulationReading);
+    readings.push(newSimulationReading2);
     const newReading = await prisma.gatewayReading.create({
       data: readings[0],
     });
@@ -99,8 +99,6 @@ export const gatewayReadingManagementRouter = router({
       })
     )
     .query(async ({ input }) => {
-      console.log("aaaaaaaaaaaaaaaaaaa");
-
       const reading = await prisma.gatewayReading.findFirst({
         where: {
           gatewaySerialNumber: input.uuid,
@@ -110,7 +108,6 @@ export const gatewayReadingManagementRouter = router({
         },
       });
       console.log(reading);
-
 
       return reading?.systemSummaryJson as SystemSummary | undefined;
     }),
