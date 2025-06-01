@@ -43,12 +43,14 @@ type DeviceSolarGridProps = {
   modelPath: string;
   rotationSpeed?: number;
   solarStatus?: SolarStatusInfo[];
+  className?: string;
 };
 
 export const DeviceSolarGrid = ({
   modelPath,
   solarStatus = defaultSolarStatus,
   rotationSpeed = 20,
+  className = '',
 }: DeviceSolarGridProps) => {
   const mountRef = useRef<HTMLDivElement>(null);
   const cameraRef = useRef<THREE.PerspectiveCamera>(null);
@@ -193,5 +195,5 @@ export const DeviceSolarGrid = ({
     updateCells();
   }, [updateCells]);
 
-  return <div ref={mountRef} style={{ width: '100%', height: '100%' }} />;
+  return <div ref={mountRef} style={{ width: '100%', height: '100%' }} className={className} />;
 };
