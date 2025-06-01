@@ -5,7 +5,7 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
 type SolarStatusInfo = { x: number; y: number; state: SolarStatus };
-
+// 1_2_paneldfksdfjkdbfdsfkhu
 export enum SolarStatus {
   GOOD,
   WARNING,

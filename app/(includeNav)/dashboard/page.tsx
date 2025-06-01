@@ -10,7 +10,7 @@ import { IoAddCircleOutline, IoWarningOutline } from 'react-icons/io5';
 type DeviceStatus = 'good' | 'warning' | 'bad';
 
 interface Panel {
-  status_label: DeviceStatus;
+  statusLabel: DeviceStatus;
   // Add other panel properties as needed
 }
 
@@ -34,8 +34,8 @@ export default function Page() {
 
   const getDeviceStatus = (panels: Panel[]): DeviceStatus => {
     if (!panels || panels.length === 0) return 'good'; // Default status if no panels
-    if (panels.some((panel) => panel.status_label === 'bad')) return 'bad';
-    if (panels.some((panel) => panel.status_label === 'warning')) return 'warning';
+    if (panels.some((panel) => panel.statusLabel === 'bad')) return 'bad';
+    if (panels.some((panel) => panel.statusLabel === 'warning')) return 'warning';
     return 'good';
   };
 
@@ -54,7 +54,6 @@ export default function Page() {
         </Card>
         <div className="flex flex-col gap-4">
           <div className="w-full">
-            {}
             {Array.isArray(data) && data.length === 0 && (
               <span className="flex w-full justify-center text-gray-500">
                 No devices found. Please add a device to get started.
@@ -69,7 +68,7 @@ export default function Page() {
                     </div>
                   );
                 }
-                const status = getDeviceStatus(device.panels ?? []);
+                const status = getDeviceStatus((device.panels ?? []) as never as Panel[]);
                 const statusConfig = {
                   bad: { icon: <span className="text-3xl text-red-600">!</span>, color: 'red-600' },
                   warning: {
