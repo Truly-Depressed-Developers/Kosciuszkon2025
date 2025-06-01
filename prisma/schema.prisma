@@ -29,15 +29,11 @@ model GatewayReading {
   environmentalContextJson        Json
   gatewayInternalTemperaturesJson Json
   individualModulePerformanceJson Json
-
-  device_id String
-  device    Device @relation(fields: [device_id], references: [uuid])
 }
 
 model Device {
   uuid      String           @id @unique
   userId    String
-  readings  GatewayReading[]
   createdAt DateTime         @default(now())
   updatedAt DateTime         @updatedAt
 }

@@ -57,10 +57,10 @@ DATA_TEMPLATE = {
         "serialNumber": None,
     },
     "systemSummary": {
-        "totalAcPowerOutput": {"value": 5750, "unit": "W"},
-        "totalDcInputPower": {"value": 5980, "unit": "W"},
-        "energyProducedToday": {"value": 28.5, "unit": "kWh"},
-        "energyProducedTotalLifetime": {"value": 15264.2, "unit": "kWh"},
+        "total_ac_power_output": {"value": 5750, "unit": "W"},
+        "total_dc_input_power": {"value": 5980, "unit": "W"},
+        "energy_produced_today": {"value": 28.5, "unit": "kWh"},
+        "energy_produced_total_lifetime": {"value": 15264.2, "unit": "kWh"},
     },
     "overallOperationalStatus": {
         "systemStateNumeric": 4,
@@ -123,7 +123,7 @@ def generate_data(manufacturer, model, serialNumber):
         ]
     )
 
-    data["systemSummary"]["totalDcInputPower"]["value"] = sum(
+    data["systemSummary"]["total_dc_input_power"]["value"] = sum(
         [cell["dcPower"]["value"] for cell in data["individualModulePerformance"]]
     )
 
