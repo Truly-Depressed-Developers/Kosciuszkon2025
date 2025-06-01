@@ -5,8 +5,8 @@ import { router, protectedProcedure } from '../init';
 // Define or import the Panel type
 type Panel = {
   id: string;
-  module_id: string;
-  status_label: 'good' | 'warning' | 'bad';
+  moduleId: string;
+  statusId: 'good' | 'warning' | 'bad';
   // Add other properties as needed
 };
 

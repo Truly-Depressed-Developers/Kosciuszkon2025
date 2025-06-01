@@ -39,25 +39,25 @@ export default function Page() {
       <div className="m-auto h-full w-1/2">
         <div className="flex flex-col gap-4">
           <div className="mb-2 w-full text-gray-500">
-            {data.filter((panel) => panel.status_label !== 'good').length === 0 && (
+            {data.filter((panel) => panel.statusLabel !== 'good').length === 0 && (
               <span className="flex w-full justify-center">All panels are in good condition.</span>
             )}
 
             {data
-              .filter((panel) => panel.status_label !== 'good')
+              .filter((panel) => panel.statusLabel !== 'good')
               .map((panel) => (
-                <Card key={panel.module_id} className="mb-2 flex w-full items-center shadow-lg">
+                <Card key={panel.moduleId} className="mb-2 flex w-full items-center shadow-lg">
                   <div className="m-2 flex w-full items-center justify-between p-1">
-                    <span>Panel {panel.module_id}</span>
+                    <span>Panel {panel.moduleId}</span>
                     <div className="flex items-center justify-center gap-2">
                       <Badge
                         className={
-                          panel.status_label === 'warning'
+                          panel.statusLabel === 'warning'
                             ? 'bg-warningAlert text-warningAlert-foreground'
                             : 'bg-errorAlert text-errorAlert-foreground'
                         }
                       >
-                        {panel.status_label}
+                        {panel.statusLabel}
                       </Badge>
                       <Link href="https://www.canadiansolar.com/">
                         <Button className="ml-2 py-1" size="sm">

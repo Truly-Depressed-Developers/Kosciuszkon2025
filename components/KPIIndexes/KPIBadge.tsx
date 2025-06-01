@@ -6,7 +6,7 @@ import { Loader2 } from 'lucide-react';
 type Props = {
   text: string;
   UUID: string;
-  summaryKey: keyof SystemSummary;
+  summaryKey: 'total_dc_input_power' | 'energy_produced_today' | 'energy_produced_total_lifetime';
 };
 
 export default function KPIBadge(props: Props) {
@@ -17,7 +17,10 @@ export default function KPIBadge(props: Props) {
   );
 }
 function InnerKPIBadge({ text, UUID, summaryKey }: Props) {
-  const { data: deviceData } = trpc.gatewayReading.getReadingById.useQuery(
+  console.log('UUID', UUID);
+  console.log('summaryKey', summaryKey);
+  console.log('text', text);
+  const { data: deviceData } = trpc.gatewayReading.getReadingSummary.useQuery(
     { uuid: UUID },
     { refetchInterval: 5000 }
   );
@@ -30,9 +33,7 @@ function InnerKPIBadge({ text, UUID, summaryKey }: Props) {
       </>
     );
   }
-  const systemSummary: SystemSummary = (deviceData?.systemSummaryJson as SystemSummary) || {};
-
-  console.log('systemSummary', systemSummary);
+  const systemSummary: SystemSummary = (deviceData as SystemSummary) || {};
 
   const wattage = systemSummary[summaryKey].value || 0;
   const unit = systemSummary[summaryKey].unit || 'W';

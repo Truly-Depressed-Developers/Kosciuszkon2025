@@ -4,8 +4,14 @@ import { Button } from '@/components/ui/button';
 import { DeviceSolarGrid } from '@/components/visualization/DeviceSolarGrid';
 import Link from 'next/link';
 
-export default function Page({ params }: { params: { id: string } }) {
-  const { id } = params;
+// const Page = async({ params }: Promise<{ id: string }>)=>{
+
+// const { id } = await params;
+
+// }
+
+export default async function Page({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
 
   return (
     <PageLayout full={true} className="relative size-full">
@@ -28,6 +34,7 @@ export default function Page({ params }: { params: { id: string } }) {
       <DeviceSolarGrid
         modelPath="/static/models/car/car.gltf"
         rotationSpeed={15}
+        // solarStatus={ }
         className="absolute left-0 top-0"
       />
     </PageLayout>
