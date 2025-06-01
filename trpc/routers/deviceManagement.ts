@@ -48,13 +48,6 @@ export const deviceManagementRouter = router({
     return {
       devices: devices.map((device) => ({
         uuid: device.uuid,
-        panels: [
-          { id: 1, status: 'online' },
-          { id: 2, status: 'offline' },
-          { id: 3, status: 'online' },
-          { id: 4, status: 'offline' },
-          { id: 5, status: 'online' },
-        ],
       })),
     };
   }),
