@@ -1,8 +1,12 @@
+'use client';
+
 import KPIBadge from '@/components/KPIIndexes/KPIBadge';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { Button } from '@/components/ui/button';
-import { DeviceSolarGrid } from '@/components/visualization/DeviceSolarGrid';
+import { DeviceSolarGrid, SolarStatus } from '@/components/visualization/DeviceSolarGrid';
+import { trpc } from '@/trpc/client';
 import Link from 'next/link';
+import { useParams } from 'next/navigation';
 
 // const Page = async({ params }: Promise<{ id: string }>)=>{
 
@@ -10,8 +14,20 @@ import Link from 'next/link';
 
 // }
 
-export default async function Page({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params;
+// { params }: { params: Promise<{ id: string }> }
+
+export default function Page() {
+  const { id } = useParams() as { id: string };
+  const { data } = trpc.gatewayReading.getReadingById.useQuery(
+    { uuid: id },
+    { refetchInterval: 5000 }
+  );
+
+  if (!data) {
+    return <div>No data available for this device.</div>;
+  }
+
+  console.log(data);
 
   return (
     <PageLayout full={true} className="relative size-full">
@@ -34,7 +50,25 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
       <DeviceSolarGrid
         modelPath="/static/models/car/car.gltf"
         rotationSpeed={15}
-        // solarStatus={ }
+        solarStatus={data.map((item) => {
+          // Extract x and y from moduleId (format: "x_y_PANEL_suffix")
+          const [x, y] = item.moduleId.split('_').map(Number);
+
+          // Map statusLabel to SolarStatus enum
+          let state;
+          switch (item.statusLabel.toLowerCase()) {
+            case 'good':
+              state = SolarStatus.GOOD;
+              break;
+            case 'warning':
+              state = SolarStatus.WARNING;
+              break;
+            default:
+              state = SolarStatus.BAD;
+          }
+
+          return { x, y, state };
+        })}
         className="absolute left-0 top-0"
       />
     </PageLayout>

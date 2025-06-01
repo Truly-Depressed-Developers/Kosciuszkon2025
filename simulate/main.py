@@ -185,9 +185,9 @@ if __name__ == "__main__":
     # GW-SN-987654321
 
     create_datasource("BiSolar", "Hyundai IONIQ 5", "HY-IO-632829582", 10, 180, 5)
-    # create_datasource("BiSolar", "Hyundai IONIQ 5", "GW-SN-987654321", 10, 180, 5)
-    # create_datasource("BiSolar", "Hyundai IONIQ 5", "GW-SN-987654321-1", 10, 180, 5)
-    # create_datasource("BiSolar", "Hyundai IONIQ 5", "GW-SN-987654321-2", 10, 180, 5)
+    create_datasource("BiSolar", "Hyundai IONIQ 5", "GW-SN-987654321", 10, 180, 5)
+    create_datasource("BiSolar", "Hyundai IONIQ 5", "GW-SN-987654321-1", 10, 180, 5)
+    create_datasource("BiSolar", "Hyundai IONIQ 5", "GW-SN-987654321-2", 10, 180, 5)
     while True:
         schedule.run_pending()
         time.sleep(1)
