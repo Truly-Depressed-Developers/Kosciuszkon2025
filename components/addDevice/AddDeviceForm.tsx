@@ -73,7 +73,7 @@ export default function AddDeviceForm({ className = '' }: Props) {
                 </span>
               </div>
             )}
-            <Label htmlFor="deviceName">Device UUID</Label>
+            <Label htmlFor="deviceName">Device serial number</Label>
             <Input
               id="deviceName"
               value={deviceUUID}

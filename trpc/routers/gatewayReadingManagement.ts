@@ -3,6 +3,13 @@ import { prisma } from '@/prisma/prisma';
 import { router, protectedProcedure } from '../init';
 import sunspecJson from '@/trpc/sunspec_example.json';
 
+type Panel = {
+  id: string;
+  module_id: string;
+  status_label: 'good' | 'warning' | 'bad';
+  // Add other properties as needed
+};
+
 function transformSunspecJsonToGatewayReading(data: typeof sunspecJson) {
   return {
     timestamp: new Date(data.timestamp),
@@ -82,13 +89,6 @@ export const gatewayReadingManagementRouter = router({
         },
       });
 
-      if (!reading) {
-        return {
-          success: false,
-          message: 'No reading found for the provided UUID.',
-        };
-      }
-
-      return reading;
+      return reading?.individualModulePerformanceJson as Panel[] | undefined;
     }),
 });

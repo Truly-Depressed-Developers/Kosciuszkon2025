@@ -87,7 +87,7 @@ export default function Page() {
                     <Card className="mb-2 w-full cursor-pointer rounded-lg bg-transparent shadow-lg transition-all hover:bg-gray-800">
                       <div className="flex w-full justify-between border-gray-600 p-4 shadow-lg hover:no-underline">
                         <div className="flex items-center gap-4">
-                          <div className="flex w-2 items-center justify-center">
+                          <div className="flex size-4 w-4 items-center justify-center">
                             {statusConfig[status].icon}
                           </div>
                           <div>
