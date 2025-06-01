@@ -16,13 +16,28 @@ import { FaArrowRightToBracket } from 'react-icons/fa6';
 
 // const panelStatuses = Array.from({ length: 50 }, (_, i) => ({
 //   id: i + 1,
-//   status: Math.random() > 0.2 ? "online" : "offline", // ~80% online
+//   status: Math.random() > 0.2 ? "Optimal" : "offline", // ~80% Optimal
 // }));
 
 export default async function Page() {
-  // const [currentPanel, setCurrentPanel] = React.useState<number | null>(null);
-  const data = await trpc.device.getDevices();
-  // const handleSetCurrentPanel = (id: number) => setCurrentPanel(id);
+  const devices = await trpc.device.getDevices();
+
+  const data = await Promise.all(
+    devices.devices.map(async (device) => {
+      const panels = await trpc.gatewayReading.getReadingById({
+        uuid: device.uuid,
+      });
+
+      return {
+        ...device,
+        panels: panels.individualModulePerformanceJson as {
+          module_id: string;
+          status_label: string;
+        }[],
+      };
+    })
+  );
+  // const data = await trpc.device.getDevices();
 
   return (
     <PageLayout>
@@ -30,13 +45,13 @@ export default async function Page() {
       <div className="m-auto h-full w-1/2">
         <Card className="flex flex-col gap-4">
           <Accordion type="single" collapsible className="w-full">
-            {data.devices.map((device) => (
+            {data.map((device) => (
               // <Link href={`/dashboard/device/${device.uuid}`} key={device.uuid}>
               <AccordionItem key={device.uuid} value={device.uuid}>
                 <AccordionTrigger className="flex w-full justify-between border-gray-600 p-4 shadow-lg hover:no-underline">
                   <div className="flex items-center gap-4">
                     <div className="flex w-2 items-center justify-center">
-                      {device.panels.filter((s) => s.status === 'offline').length > 0 ? (
+                      {device.panels.filter((s) => s.status_label === 'Failed').length > 0 ? (
                         <span className="text-3xl text-red-600">!</span>
                       ) : (
                         <span className="text-xl text-green-600">✓</span>
@@ -49,14 +64,14 @@ export default async function Page() {
                   </div>
                   <div className="ml-auto flex items-center gap-2">
                     <Badge className="mr-2 bg-successAlert text-successAlert-foreground">
-                      {device.panels.filter((s) => s.status === 'online').length} online
+                      {device.panels.filter((s) => s.status_label === 'Optimal').length} online
                     </Badge>
-                    {device.panels.filter((s) => s.status === 'offline').length > 0 ? (
+                    {device.panels.filter((s) => s.status_label === 'offline').length > 0 ? (
                       <Badge
                         variant={'destructive'}
                         className="mr-2 bg-errorAlert text-errorAlert-foreground"
                       >
-                        {device.panels.filter((s) => s.status === 'offline').length} offline
+                        {device.panels.filter((s) => s.status_label === 'offline').length} offline
                       </Badge>
                     ) : null}
                   </div>
@@ -64,7 +79,8 @@ export default async function Page() {
                 <AccordionContent className="mx-1 mb-4 border-t-2 p-4 shadow-lg">
                   <CardDescription>
                     <div className="flex w-full justify-between">
-                      {device.panels.filter((panel) => panel.status === 'offline').length == 0 ? (
+                      {device.panels.filter((panel) => panel.status_label === 'offline').length ==
+                      0 ? (
                         <div className="m-2 flex justify-between">
                           <span>Everything seems fine</span>
                         </div>
@@ -80,18 +96,18 @@ export default async function Page() {
                       </Link>
                     </div>
                     {device.panels
-                      .filter((panel) => panel.status === 'offline')
+                      .filter((panel) => panel.status_label === 'offline')
                       .map((panel) => (
-                        <div key={panel.id} className="m-2 flex justify-between">
-                          <span>Panel {panel.id}</span>
+                        <div key={panel.module_id} className="m-2 flex justify-between">
+                          <span>Panel {panel.module_id}</span>
                           <Badge
                             className={
-                              panel.status === 'online'
+                              panel.status_label === 'Optimal'
                                 ? 'bg-successAlert text-successAlert-foreground'
                                 : 'bg-errorAlert text-errorAlert-foreground'
                             }
                           >
-                            {panel.status}
+                            {panel.status_label}
                           </Badge>
                         </div>
                       ))}
