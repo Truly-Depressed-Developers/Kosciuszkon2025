@@ -1,6 +1,6 @@
-@use "tailwindcss/base";
-@use "tailwindcss/components";
-@use "tailwindcss/utilities";
+@use 'tailwindcss/base';
+@use 'tailwindcss/components';
+@use 'tailwindcss/utilities';
 
 @layer base {
   :root {
@@ -16,6 +16,8 @@
     --card-foreground: 0 0% 3.9%;
     --error-alert: 360 88% 97%;
     --error-alert-foreground: 357.18 100% 45%;
+    --warning-alert: 100.46 100% 97%;
+    --warning-alert-foreground: 38.46 100% 33%;
     --success-alert: 138.46 77% 97%;
     --success-alert-foreground: 142.31 100% 33%;
     --primary: 0 0% 9%;
@@ -69,6 +71,6 @@
   }
 
   body {
-    @apply font-sans antialiased bg-background text-foreground;
+    @apply bg-background font-sans text-foreground antialiased;
   }
 }

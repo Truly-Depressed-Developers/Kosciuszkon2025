@@ -21,7 +21,7 @@ export default function Page({ params }: { params: { id: string } }) {
         </div>
         <div>
           <Button asChild className="text-primary-background bg-primary-foreground">
-            <Link href="/">Action Center</Link>
+            <Link href={`/device/${id}/advancedView`}>Action Center</Link>
           </Button>
         </div>
       </div>

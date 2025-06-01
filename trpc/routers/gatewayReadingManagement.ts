@@ -3,6 +3,13 @@ import { prisma } from '@/prisma/prisma';
 import { router, protectedProcedure } from '../init';
 import sunspecJson from '@/trpc/sunspec_example.json';
 
+type Panel = {
+  id: string;
+  module_id: string;
+  status_label: 'good' | 'warning' | 'bad';
+  // Add other properties as needed
+};
+
 function transformSunspecJsonToGatewayReading(data: typeof sunspecJson) {
   return {
     timestamp: new Date(data.timestamp),
@@ -21,10 +28,47 @@ function transformSunspecJsonToGatewayReading(data: typeof sunspecJson) {
 
 export const gatewayReadingManagementRouter = router({
   addNewGatewayReading: protectedProcedure.mutation(async () => {
+    const readings = [];
     const transformed = transformSunspecJsonToGatewayReading(sunspecJson);
+    // for (let i = 0; i < 4; i++) {
+    const newSimulationReading = {
+      ...transformed,
+      timestamp: new Date(transformed.timestamp.getTime() + 1 * 1000), // Simulate different timestamps
+      gatewaySerialNumber: `${transformed.gatewaySerialNumber}-1`, // Simulate different serial numbers
+      individualModulePerformanceJson: transformed.individualModulePerformanceJson.map(
+        (module) => ({
+          ...module,
+          module_id: `${module.module_id}-1`, // Simulate different module IDs
+          status_label: module.status_label === 'bad' ? 'good' : module.status_label,
+        })
+      ),
+    };
 
+    const newSimulationReading2 = {
+      ...transformed,
+      timestamp: new Date(transformed.timestamp.getTime() + 2 * 1000), // Simulate different timestamps
+      gatewaySerialNumber: `${transformed.gatewaySerialNumber}-2`, // Simulate different serial numbers
+      individualModulePerformanceJson: transformed.individualModulePerformanceJson.map(
+        (module) => ({
+          ...module,
+          module_id: `${module.module_id}-2`, // Simulate different module IDs
+          status_label: 'good',
+        })
+      ),
+    };
+
+    // }
+    readings.push(transformed);
+    readings.push(newSimulationReading);
+    readings.push(newSimulationReading2);
     const newReading = await prisma.gatewayReading.create({
-      data: transformed,
+      data: readings[0],
+    });
+    await prisma.gatewayReading.create({
+      data: readings[1],
+    });
+    await prisma.gatewayReading.create({
+      data: readings[2],
     });
 
     return newReading;
@@ -45,10 +89,6 @@ export const gatewayReadingManagementRouter = router({
         },
       });
 
-      if (!reading) {
-        throw new Error('Reading not found');
-      }
-
-      return reading;
+      return reading?.individualModulePerformanceJson as Panel[] | undefined;
     }),
 });

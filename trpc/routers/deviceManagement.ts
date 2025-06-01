@@ -2,6 +2,14 @@ import { z } from 'zod';
 import { prisma } from '@/prisma/prisma';
 import { router, protectedProcedure } from '../init';
 
+// Define or import the Panel type
+type Panel = {
+  id: string;
+  module_id: string;
+  status_label: 'good' | 'warning' | 'bad';
+  // Add other properties as needed
+};
+
 export const deviceManagementRouter = router({
   addDevice: protectedProcedure
     .input(
@@ -20,6 +28,18 @@ export const deviceManagementRouter = router({
         return {
           success: false,
           message: `Device ${existingDevice.uuid} already exists`,
+        };
+      }
+
+      const existingGateway = await prisma.gatewayReading.findFirst({
+        where: {
+          gatewaySerialNumber: input.uuid,
+        },
+      });
+      if (!existingGateway) {
+        return {
+          success: false,
+          message: `No gateway reading found for device ${input.uuid}. Please ensure the device is registered.`,
         };
       }
 
@@ -44,11 +64,30 @@ export const deviceManagementRouter = router({
         createdAt: 'desc',
       },
     });
+    if (!devices || devices.length === 0) {
+      return {
+        success: false,
+        message: 'No devices found for the user.',
+      };
+    }
 
-    return {
-      devices: devices.map((device) => ({
-        uuid: device.uuid,
-      })),
-    };
+    const readings = await Promise.all(
+      devices.map(async (device) => {
+        const reading = await prisma.gatewayReading.findFirst({
+          where: {
+            gatewaySerialNumber: device.uuid,
+          },
+          orderBy: {
+            createdAt: 'desc',
+          },
+        });
+
+        return {
+          uuid: device.uuid,
+          panels: reading?.individualModulePerformanceJson as Panel[] | undefined,
+        };
+      })
+    );
+    return readings;
   }),
 });

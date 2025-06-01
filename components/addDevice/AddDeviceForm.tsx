@@ -9,6 +9,8 @@ import { trpc } from '@/trpc/client';
 import { ServerMessage } from '@/types/Auth';
 import { cn } from '@/lib/utils';
 import { Loader2 } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
+import Link from 'next/link';
 
 type Props = {
   className?: string;
@@ -54,7 +56,14 @@ export default function AddDeviceForm({ className = '' }: Props) {
     <div className={className}>
       <Card className="max-auto max-w-sm">
         <CardHeader>
-          <CardTitle>Add Device</CardTitle>
+          <CardTitle>
+            <Button variant="link">
+              <Link href="/dashboard" className="flex items-center gap-2">
+                <ArrowLeft />
+              </Link>
+            </Button>
+            Add Device
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit}>
@@ -73,7 +82,8 @@ export default function AddDeviceForm({ className = '' }: Props) {
                 </span>
               </div>
             )}
-            <Label htmlFor="deviceName">Device UUID</Label>
+
+            <Label htmlFor="deviceName">Device serial number</Label>
             <Input
               id="deviceName"
               value={deviceUUID}
