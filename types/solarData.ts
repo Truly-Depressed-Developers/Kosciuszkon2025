@@ -26,10 +26,10 @@ export const gatewayDeviceIdentificationSchema = z.object({
 export type GatewayDeviceIdentification = z.infer<typeof gatewayDeviceIdentificationSchema>;
 
 export const systemSummarySchema = z.object({
-  totalAcPowerOutput: valueUnitSchema,
-  totalDcInputPower: valueUnitSchema,
-  energyProducedToday: valueUnitSchema,
-  energyProducedTotalLifetime: valueUnitSchema,
+  total_ac_power_output: valueUnitSchema,
+  total_dc_input_power: valueUnitSchema,
+  energy_produced_today: valueUnitSchema,
+  energy_produced_total_lifetime: valueUnitSchema,
 });
 export type SystemSummary = z.infer<typeof systemSummarySchema>;
 
@@ -62,7 +62,9 @@ export const gatewayInternalTemperaturesSchema = z.object({
 export type GatewayInternalTemperatures = z.infer<typeof gatewayInternalTemperaturesSchema>;
 
 export const gatewayDataInputSchema = z.object({
-  timestamp: z.string().datetime({ message: "Timestamp musi być poprawną datą w formacie ISO 8601" }),
+  timestamp: z
+    .string()
+    .datetime({ message: 'Timestamp musi być poprawną datą w formacie ISO 8601' }),
   gatewayDeviceIdentification: gatewayDeviceIdentificationSchema,
   systemSummary: systemSummarySchema,
   overallOperationalStatus: overallOperationalStatusSchema,
@@ -71,7 +73,6 @@ export const gatewayDataInputSchema = z.object({
   gatewayInternalTemperatures: gatewayInternalTemperaturesSchema,
   individualModulePerformance: z.array(panelPerformanceSchema),
 });
-
 
 export type GatewayDataInput = z.infer<typeof gatewayDataInputSchema>;
 
