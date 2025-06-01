@@ -21,10 +21,47 @@ function transformSunspecJsonToGatewayReading(data: typeof sunspecJson) {
 
 export const gatewayReadingManagementRouter = router({
   addNewGatewayReading: protectedProcedure.mutation(async () => {
+    const readings = [];
     const transformed = transformSunspecJsonToGatewayReading(sunspecJson);
+    // for (let i = 0; i < 4; i++) {
+    const newSimulationReading = {
+      ...transformed,
+      timestamp: new Date(transformed.timestamp.getTime() + 1 * 1000), // Simulate different timestamps
+      gatewaySerialNumber: `${transformed.gatewaySerialNumber}-1`, // Simulate different serial numbers
+      individualModulePerformanceJson: transformed.individualModulePerformanceJson.map(
+        (module) => ({
+          ...module,
+          module_id: `${module.module_id}-1`, // Simulate different module IDs
+          status_label: module.status_label === 'bad' ? 'good' : module.status_label,
+        })
+      ),
+    };
 
+    const newSimulationReading2 = {
+      ...transformed,
+      timestamp: new Date(transformed.timestamp.getTime() + 2 * 1000), // Simulate different timestamps
+      gatewaySerialNumber: `${transformed.gatewaySerialNumber}-2`, // Simulate different serial numbers
+      individualModulePerformanceJson: transformed.individualModulePerformanceJson.map(
+        (module) => ({
+          ...module,
+          module_id: `${module.module_id}-2`, // Simulate different module IDs
+          status_label: 'good',
+        })
+      ),
+    };
+
+    // }
+    readings.push(transformed);
+    readings.push(newSimulationReading);
+    readings.push(newSimulationReading2);
     const newReading = await prisma.gatewayReading.create({
-      data: transformed,
+      data: readings[0],
+    });
+    await prisma.gatewayReading.create({
+      data: readings[1],
+    });
+    await prisma.gatewayReading.create({
+      data: readings[2],
     });
 
     return newReading;
@@ -46,7 +83,10 @@ export const gatewayReadingManagementRouter = router({
       });
 
       if (!reading) {
-        throw new Error('Reading not found');
+        return {
+          success: false,
+          message: 'No reading found for the provided UUID.',
+        };
       }
 
       return reading;

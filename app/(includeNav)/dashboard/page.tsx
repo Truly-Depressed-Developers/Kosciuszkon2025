@@ -1,148 +1,112 @@
+'use client';
+
 import { PageLayout, PageTitle } from '@/components/layout/PageLayout';
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from '@/components/ui/accordion';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Card, CardDescription, CardTitle } from '@/components/ui/card';
-import { trpc } from '@/trpc/server';
+import { Card, CardTitle } from '@/components/ui/card';
+import { trpc } from '@/trpc/client';
 import Link from 'next/link';
-// import Link from 'next/link';
-import React from 'react';
-import { FaArrowRightToBracket } from 'react-icons/fa6';
+import { IoAddCircleOutline, IoWarningOutline } from 'react-icons/io5';
 
-// const panelStatuses = Array.from({ length: 50 }, (_, i) => ({
-//   id: i + 1,
-//   status: Math.random() > 0.2 ? "Optimal" : "offline", // ~80% Optimal
-// }));
+type DeviceStatus = 'good' | 'warning' | 'bad';
 
-export default async function Page() {
-  const devices = await trpc.device.getDevices();
+interface Panel {
+  status_label: DeviceStatus;
+  // Add other panel properties as needed
+}
 
-  const data = await Promise.all(
-    devices.devices.map(async (device) => {
-      const panels = await trpc.gatewayReading.getReadingById({
-        uuid: device.uuid,
-      });
+export default function Page() {
+  // Update the query to handle the { devices } response structure
+  const {
+    data,
+    error: devicesError,
+    isLoading,
+  } = trpc.device.getDevices.useQuery(undefined, {
+    refetchInterval: 5000,
+  });
 
-      return {
-        ...device,
-        panels: panels.individualModulePerformanceJson as {
-          module_id: string;
-          status_label: string;
-        }[],
-      };
-    })
-  );
-  // const data = await trpc.device.getDevices();
+  if (devicesError) {
+    return <div>Error loading devices: {devicesError.message}</div>;
+  }
+
+  if (isLoading) {
+    return <div>Loading devices...</div>;
+  }
+
+  const getDeviceStatus = (panels: Panel[]): DeviceStatus => {
+    if (!panels || panels.length === 0) return 'good'; // Default status if no panels
+    if (panels.some((panel) => panel.status_label === 'bad')) return 'bad';
+    if (panels.some((panel) => panel.status_label === 'warning')) return 'warning';
+    return 'good';
+  };
 
   return (
     <PageLayout>
       <PageTitle>Dashboard</PageTitle>
-      <div className="m-auto h-full w-1/2">
-        <Card className="flex flex-col gap-4">
-          <Accordion type="single" collapsible className="w-full">
-            {data.map((device) => (
-              // <Link href={`/dashboard/device/${device.uuid}`} key={device.uuid}>
-              <AccordionItem key={device.uuid} value={device.uuid}>
-                <AccordionTrigger className="flex w-full justify-between border-gray-600 p-4 shadow-lg hover:no-underline">
-                  <div className="flex items-center gap-4">
-                    <div className="flex w-2 items-center justify-center">
-                      {device.panels.filter((s) => s.status_label === 'Failed').length > 0 ? (
-                        <span className="text-3xl text-red-600">!</span>
-                      ) : (
-                        <span className="text-xl text-green-600">✓</span>
-                      )}
-                    </div>
-                    <div>
-                      <CardTitle>Device {device.uuid}</CardTitle>
-                      <CardDescription>description</CardDescription>
-                    </div>
-                  </div>
-                  <div className="ml-auto flex items-center gap-2">
-                    <Badge className="mr-2 bg-successAlert text-successAlert-foreground">
-                      {device.panels.filter((s) => s.status_label === 'Optimal').length} online
-                    </Badge>
-                    {device.panels.filter((s) => s.status_label === 'offline').length > 0 ? (
-                      <Badge
-                        variant={'destructive'}
-                        className="mr-2 bg-errorAlert text-errorAlert-foreground"
-                      >
-                        {device.panels.filter((s) => s.status_label === 'offline').length} offline
-                      </Badge>
-                    ) : null}
-                  </div>
-                </AccordionTrigger>
-                <AccordionContent className="mx-1 mb-4 border-t-2 p-4 shadow-lg">
-                  <CardDescription>
-                    <div className="flex w-full justify-between">
-                      {device.panels.filter((panel) => panel.status_label === 'offline').length ==
-                      0 ? (
-                        <div className="m-2 flex justify-between">
-                          <span>Everything seems fine</span>
-                        </div>
-                      ) : (
-                        <div className="m-2 flex justify-between">
-                          <span>Some panels are offline</span>
-                        </div>
-                      )}
-                      <Link href={`/device/${device.uuid}`}>
-                        <Button className="mb-2" size="sm">
-                          View Details <FaArrowRightToBracket />
-                        </Button>
-                      </Link>
-                    </div>
-                    {device.panels
-                      .filter((panel) => panel.status_label === 'offline')
-                      .map((panel) => (
-                        <div key={panel.module_id} className="m-2 flex justify-between">
-                          <span>Panel {panel.module_id}</span>
-                          <Badge
-                            className={
-                              panel.status_label === 'Optimal'
-                                ? 'bg-successAlert text-successAlert-foreground'
-                                : 'bg-errorAlert text-errorAlert-foreground'
-                            }
-                          >
-                            {panel.status_label}
-                          </Badge>
-                        </div>
-                      ))}
-                  </CardDescription>
-                </AccordionContent>
-              </AccordionItem>
-              // </Link>
-            ))}
-          </Accordion>
+      <div className="m-auto h-full w-full max-w-2xl px-4">
+        <Card className="mb-4 flex w-full items-center justify-between p-4 shadow-lg">
+          <div>Add device</div>
+          <Link href="/device/add">
+            <Button className="mb-2" size="sm">
+              Add Device
+              <IoAddCircleOutline className="ml-1" />
+            </Button>
+          </Link>
         </Card>
-      </div>
-      {/* <div className='absolute'>
-        <div className="relative group w-full h-full">
-          <div className='m-2'>All statuses</div>
-          <Card className="absolute w-96 h-64 overflow-auto rounded-lg bg-transparent shadow-lg scrollbar-thin scrollbar-thumb-rounded scrollbar-thumb-gray-400 scrollbar-track-transparent">
-            <CardDescription>
-              <StatusTable data={{
-                panelStatuses: panelStatuses,
-                handleSetCurrentPanel: handleSetCurrentPanel
-              }} />
-            </CardDescription>
-          </Card>
-        </div>
-      </div> */}
-      {/* <div className='absolute right-0 bottom-0 p-4'>
-        {
-          currentPanel ? (
-            <Card className="w-96 h-64 bg-transparent shadow-lg">
-              {currentPanel}
-            </Card>
-          ) :
-            null
-        }
+        <div className="flex flex-col gap-4">
+          <div className="w-full">
+            {}
+            {Array.isArray(data) && data.length === 0 && (
+              <span className="flex w-full justify-center text-gray-500">
+                No devices found. Please add a device to get started.
+              </span>
+            )}
+            {Array.isArray(data) &&
+              data.map((device) => {
+                if (!device || !device.uuid) {
+                  return (
+                    <div key="no-device" className="text-gray-500">
+                      No devices found.
+                    </div>
+                  );
+                }
+                const status = getDeviceStatus(device.panels ?? []);
+                const statusConfig = {
+                  bad: { icon: <span className="text-3xl text-red-600">!</span>, color: 'red-600' },
+                  warning: {
+                    icon: <IoWarningOutline className="text-xl text-yellow-600" />,
+                    color: 'yellow-600',
+                  },
+                  good: {
+                    icon: <span className="text-xl text-green-600">✓</span>,
+                    color: 'green-600',
+                  },
+                };
 
-      </div> */}
+                return (
+                  <Link href={`/device/${device.uuid}`} key={device.uuid}>
+                    <Card className="mb-2 w-full cursor-pointer rounded-lg bg-transparent shadow-lg transition-all hover:bg-gray-800">
+                      <div className="flex w-full justify-between border-gray-600 p-4 shadow-lg hover:no-underline">
+                        <div className="flex items-center gap-4">
+                          <div className="flex w-2 items-center justify-center">
+                            {statusConfig[status].icon}
+                          </div>
+                          <div>
+                            <CardTitle>{`Device ${device.uuid}`}</CardTitle>
+                          </div>
+                        </div>
+                        <div className="ml-auto flex items-center gap-2">
+                          <div
+                            className={`mr-2 size-2 rounded-sm bg-${statusConfig[status].color}`}
+                          ></div>
+                        </div>
+                      </div>
+                    </Card>
+                  </Link>
+                );
+              })}
+          </div>
+        </div>
+      </div>
     </PageLayout>
   );
 }
